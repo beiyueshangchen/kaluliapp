@@ -6,9 +6,11 @@ interface ResultScreenProps {
   meal: Partial<Meal>;
   onAdd: (meal: Meal) => void;
   onBack: () => void;
+  // Fix: Added missing 't' prop for localization
+  t: (key: any) => string;
 }
 
-const ResultScreen: React.FC<ResultScreenProps> = ({ meal, onAdd, onBack }) => {
+const ResultScreen: React.FC<ResultScreenProps> = ({ meal, onAdd, onBack, t }) => {
   const [multiplier, setMultiplier] = useState(1);
   
   const baseCalories = meal.calories || 0;
@@ -44,7 +46,8 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ meal, onAdd, onBack }) => {
         <button onClick={onBack} className="flex items-center justify-center size-10 rounded-full bg-gray-100">
           <span className="material-symbols-outlined text-xl">arrow_back_ios_new</span>
         </button>
-        <h2 className="text-base font-bold tracking-tight">Recognition Result</h2>
+        {/* Use localized string for title */}
+        <h2 className="text-base font-bold tracking-tight">{t('recognitionResult')}</h2>
         <div className="size-10"></div>
       </nav>
 
@@ -90,7 +93,8 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ meal, onAdd, onBack }) => {
         {/* Portion Selector */}
         <div className="mt-8 bg-accent-cream p-5 rounded-2xl border border-primary/10">
           <div className="flex items-center justify-between mb-4">
-            <p className="text-xs font-bold text-[#648264] uppercase tracking-wider">Serving Size</p>
+            {/* Use localized string for serving size */}
+            <p className="text-xs font-bold text-[#648264] uppercase tracking-wider">{t('portionSize')}</p>
             <span className="text-primary font-extrabold text-lg">{multiplier}x</span>
           </div>
           <div className="flex gap-2">
@@ -109,15 +113,18 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ meal, onAdd, onBack }) => {
         <div className="mt-6 grid grid-cols-3 gap-3">
           <div className="bg-primary/10 p-4 rounded-xl border border-primary/20 flex flex-col items-center">
             <span className="text-primary font-bold text-lg leading-tight">{carbs}g</span>
-            <span className="text-[10px] uppercase font-bold text-gray-500 tracking-tighter">Carbs</span>
+            {/* Use localized string for carbs */}
+            <span className="text-[10px] uppercase font-bold text-gray-500 tracking-tighter">{t('carbs')}</span>
           </div>
           <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-100 flex flex-col items-center">
             <span className="text-yellow-600 font-bold text-lg leading-tight">{protein}g</span>
-            <span className="text-[10px] uppercase font-bold text-gray-500 tracking-tighter">Protein</span>
+            {/* Use localized string for protein */}
+            <span className="text-[10px] uppercase font-bold text-gray-500 tracking-tighter">{t('protein')}</span>
           </div>
           <div className="bg-[#f5ece2]/40 p-4 rounded-xl border border-[#f5ece2] flex flex-col items-center">
             <span className="text-amber-800 font-bold text-lg leading-tight">{fat}g</span>
-            <span className="text-[10px] uppercase font-bold text-gray-500 tracking-tighter">Fat</span>
+            {/* Use localized string for fat */}
+            <span className="text-[10px] uppercase font-bold text-gray-500 tracking-tighter">{t('fat')}</span>
           </div>
         </div>
 
@@ -133,7 +140,8 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ meal, onAdd, onBack }) => {
           className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/30 flex items-center justify-center gap-3 transition-all active:scale-95"
         >
           <span className="material-symbols-outlined">add_circle</span>
-          <span>Log this Meal</span>
+          {/* Use localized string for button */}
+          <span>{t('logMeal')}</span>
         </button>
       </footer>
     </div>
