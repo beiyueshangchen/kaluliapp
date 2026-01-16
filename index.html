@@ -3,8 +3,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>CalorieSense</title>
+    <!-- PWA primary color -->
+    <meta name="theme-color" content="#b2d7b2">
+    <!-- Apple touch icon -->
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2921/2921822.png">
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
@@ -37,6 +44,9 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #ffffff;
+            /* Prevent bouncing on mobile */
+            overscroll-behavior-y: contain;
+            -webkit-tap-highlight-color: transparent;
         }
         .calorie-ring {
             background: conic-gradient(#b2d7b2 var(--consumed-percent), #F9F6E7 var(--consumed-percent) 100%);
@@ -54,6 +64,9 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+        /* Mobile notch support */
+        .safe-top { padding-top: env(safe-area-inset-top); }
+        .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
     </style>
 <script type="importmap">
 {
@@ -68,5 +81,13 @@
 </head>
 <body class="bg-background-light dark:bg-background-dark text-[#121712] dark:text-white font-display">
     <div id="root"></div>
+    <script>
+      // Register Service Worker for PWA
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
+        });
+      }
+    </script>
 </body>
 </html>

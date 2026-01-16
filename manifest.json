@@ -1,0 +1,18 @@
+
+{
+  "name": "CalorieSense AI",
+  "short_name": "CalorieSense",
+  "description": "AI-powered nature-inspired calorie tracker",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#b2d7b2",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2921/2921822.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
