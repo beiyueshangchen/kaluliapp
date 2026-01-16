@@ -1,0 +1,7 @@
+{
+  "name": "CalorieSense",
+  "description": "An AI-powered calorie tracker that uses vision to identify meals and provide nutritional insights with a beautiful nature-inspired aesthetic.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
