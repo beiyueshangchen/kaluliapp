@@ -1,7 +1,7 @@
 
 # 🌿 CalorieSense AI - 运行指南
 
-看到你的截图了！报错原因是 **Windows CMD** 不认识 PowerShell 的 `$env:` 语法。
+
 
 ## 🚀 1. 最推荐的运行方式 (无需手动设置密钥)
 
