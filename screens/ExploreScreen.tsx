@@ -39,9 +39,12 @@ const ExploreScreen: React.FC<ExploreScreenProps> = ({ onNavigate, t }) => {
     setResults([]);
     setErrorMsg(null);
     try {
+      // Create a new GoogleGenAI instance right before making an API call
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
+      
+      // Use gemini-2.5-flash as it is mandatory for Google Maps grounding
       const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview", 
+        model: "gemini-2.5-flash", 
         contents: query,
         config: {
           tools: [{ googleMaps: {} }, { googleSearch: {} }],
@@ -56,17 +59,23 @@ const ExploreScreen: React.FC<ExploreScreenProps> = ({ onNavigate, t }) => {
         },
       });
 
-      const text = typeof response.text === 'string' ? response.text : String(response.text || "");
+      // Extract generated text directly from property
+      const text = response.text || "";
       setResponseText(text);
 
+      // Extract URLs from groundingChunks for both Google Search and Google Maps
       const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
-      const mapsResults = chunks
-        .filter((c: any) => c.maps && typeof c.maps === 'object')
-        .map((c: any) => c.maps);
+      const extractedResults = chunks
+        .map((c: any) => {
+          if (c.maps) return { ...c.maps, type: 'maps' };
+          if (c.web) return { ...c.web, type: 'web' };
+          return null;
+        })
+        .filter(Boolean);
       
-      setResults(mapsResults);
-      if (mapsResults.length === 0 && !text) {
-        setResponseText("No places found for your query.");
+      setResults(extractedResults);
+      if (extractedResults.length === 0 && !text) {
+        setResponseText("No relevant places or search results found.");
       }
     } catch (err) {
       console.error("Explore search failed:", err);
@@ -113,19 +122,23 @@ const ExploreScreen: React.FC<ExploreScreenProps> = ({ onNavigate, t }) => {
 
         {responseText && (
           <div className="bg-white rounded-2xl p-5 border border-soft-gray shadow-sm">
-            <p className="text-sm leading-relaxed text-[#121712]">{responseText}</p>
+            <p className="text-sm leading-relaxed text-[#121712] whitespace-pre-wrap">{responseText}</p>
           </div>
         )}
 
         <div className="grid gap-4">
-          {results.map((place, idx) => (
-            <a key={idx} href={place.uri} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 bg-white p-4 rounded-2xl border border-soft-gray shadow-sm hover:border-primary/30 transition-all">
+          {results.map((item, idx) => (
+            <a key={idx} href={item.uri} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 bg-white p-4 rounded-2xl border border-soft-gray shadow-sm hover:border-primary/30 transition-all">
               <div className="size-14 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
-                <span className="material-symbols-outlined text-primary">location_on</span>
+                <span className="material-symbols-outlined text-primary">
+                  {item.type === 'maps' ? 'location_on' : 'language'}
+                </span>
               </div>
               <div className="flex-1">
-                <h4 className="text-sm font-bold">{place.title || "Health Spot"}</h4>
-                <p className="text-[10px] text-[#648264] uppercase font-bold mt-0.5">View Map</p>
+                <h4 className="text-sm font-bold truncate max-w-[200px]">{item.title || (item.type === 'maps' ? "Health Spot" : "Web Resource")}</h4>
+                <p className="text-[10px] text-[#648264] uppercase font-bold mt-0.5">
+                  {item.type === 'maps' ? 'View on Maps' : 'Visit Website'}
+                </p>
               </div>
               <span className="material-symbols-outlined text-gray-300">open_in_new</span>
             </a>

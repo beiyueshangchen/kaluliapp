@@ -2,9 +2,10 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Meal } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
-
 export const analyzeFoodImage = async (base64Image: string): Promise<Partial<Meal>> => {
+  // Move client initialization inside the function to ensure it always uses the current process.env.API_KEY
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
+  
   try {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
@@ -51,6 +52,7 @@ export const analyzeFoodImage = async (base64Image: string): Promise<Partial<Mea
       }
     });
 
+    // Access .text property directly as specified in the guidelines
     const result = JSON.parse(response.text || "{}");
     return result;
   } catch (error) {
